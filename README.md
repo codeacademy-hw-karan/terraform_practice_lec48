@@ -1,4 +1,5 @@
 # terraform_practice_lec48
+## TASK
 ### Create 3 VMs using terraform and CI/CD 
 ### Have a Chekov step to check your terraoform code 
 ### Fix the code with Chekov suggestions 
