@@ -1,0 +1,20 @@
+name: Dependent Workflow
+
+on:
+  workflow_run:
+    workflows: ["Main Workflow"]  # Name of the first workflow
+    types:
+      - completed  # Trigger only on completion of the first workflow
+  workflow_dispatch:
+
+jobs:
+  run_on_success:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}  # Only runs if the first workflow succeeded
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Run dependent job
+        run: echo "Triggered by successful completion of Main Workflow"
