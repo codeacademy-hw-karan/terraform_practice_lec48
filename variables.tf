@@ -24,10 +24,10 @@ variable "admin_username" {
   type        = string
 }
 
-variable "admin_password" {
-  description = "Admin password for the VMs"
+variable public_key {
   type        = string
-  sensitive   = true
+  default     = ""
+  description = "Public key for new VMs"
 }
 
 variable "environment" {
