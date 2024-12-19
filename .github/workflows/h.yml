@@ -38,7 +38,7 @@ jobs:
       run: |
         az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
         terraform init
-        terraform workspace select ${{ github.event.inputs.environment }}
+        #terraform workspace select ${{ github.event.inputs.environment }}
         terraform plan -var="machine_size="Standard_B1s"" -var-file vars.${{ github.event.inputs.environment }}.tfvars -out ${{ github.event.inputs.environment }}.plan
     - name: Test with Checkov
       id: checkov
@@ -48,7 +48,7 @@ jobs:
           framework: terraform
     - name: Terraform apply
       run: |
-        terraform workspace select ${{ github.event.inputs.environment }}
+        #terraform workspace select ${{ github.event.inputs.environment }}
         terraform apply --auto-approve "${{ github.event.inputs.environment }}.plan"
 
     - name: Terraform output
