@@ -1,27 +1,29 @@
-resource "azurerm_virtual_machine" "vm" {
-  count               = 3
-  name                = "vm-${count.index + 1}"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  size                = var.vm_size
+   resource "azurerm_linux_virtual_machine" "vm" {
+  count                 = 3
+  name                  = "vm-${count.index + 1}"
+  location              = var.location
+  resource_group_name   = var.resource_group_name
+  size               	= var.vm_size
+  admin_username        = "adminuser"
   network_interface_ids = [azurerm_network_interface.nic[count.index].id]
-  os_profile           = {
-    computer_name = "vm-${count.index + 1}"
-    admin_username = var.admin_username
-    admin_password = var.admin_password
-  } 
-  os_profile_linux_config = {
-    disable_password_authentication = false
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
   }
-  storage_os_disk = {
-    name              = "disk-${count.index + 1}"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed           = true
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = var.public_key
   }
 
   tags = {
     environment = var.environment
+  }
+source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
+    version   = "latest"
   }
 }
 
@@ -32,9 +34,9 @@ resource "azurerm_network_interface" "nic" {
   resource_group_name = var.resource_group_name
   ip_configuration {
     name                          = "internal"
-    subnet_id                    = azurerm_subnet.subnet.id
+    subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id         = azurerm_public_ip.pip[count.index].id
+    public_ip_address_id          = azurerm_public_ip.pip[count.index].id
   }
 }
 
